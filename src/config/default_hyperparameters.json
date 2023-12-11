@@ -1,9 +1,9 @@
 {
   "history_forecast_ratio": 10,
   "lags_forecast_ratio": 4,
-  "num_blocks": 2,
+  "num_blocks": 3,
   "num_stacks": 3,
-  "num_layers": 4,
+  "num_layers": 5,
   "layer_widths": 64,
   "dropout": 0.0,
   "n_epochs": 300,
