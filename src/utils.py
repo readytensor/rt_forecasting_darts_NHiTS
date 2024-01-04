@@ -1,3 +1,4 @@
+import time
 import json
 import os
 import random
@@ -198,21 +199,15 @@ def make_serializable(obj: Any) -> Union[int, float, List[Union[int, float]], An
         return json.JSONEncoder.default(None, obj)
 
 
-def process_hyperparameters(hyperparameters: dict, forecast_length: int) -> dict:
-    to_be_removed = ["history_forecast_ratio", "lags_forecast_ratio"]
+class Timer(object):
+    def __init__(self, logger):
+        self.logger = logger
 
-    if hyperparameters.get("history_forecast_ratio"):
-        history_forecast_ratio = hyperparameters["history_forecast_ratio"]
-        history_length = forecast_length * history_forecast_ratio
-        hyperparameters["history_length"] = history_length
+    def __enter__(self):
+        self.start = time.time()
+        return self
 
-    if hyperparameters.get("lags_forecast_ratio"):
-        lags_forecast_ratio = hyperparameters["lags_forecast_ratio"]
-        lags = forecast_length * lags_forecast_ratio
-        hyperparameters["input_chunk_length"] = lags
-        hyperparameters["output_chunk_length"] = forecast_length
-
-    for k in to_be_removed:
-        if k in hyperparameters:
-            hyperparameters.pop(k)
-    return hyperparameters
+    def __exit__(self, *args):
+        self.end = time.time()
+        self.interval = self.end - self.start
+        self.logger.info(f"Execution time: {self.interval:.2f} seconds")
