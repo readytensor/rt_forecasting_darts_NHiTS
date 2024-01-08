@@ -37,14 +37,13 @@ class Forecaster:
         history_forecast_ratio: int = None,
         lags_forecast_ratio: int = None,
         num_stacks: int = 3,
-        num_blocks: int = 1,
-        num_layers: int = 2,
-        layer_widths: Union[int, List[int]] = 256,
-        dropout: float = 0.0,
+        num_blocks: int = 3,
+        num_layers: int = 3,
+        dropout: float = 0.15,
         activation: str = "ReLU",
         pooling_kernel_sizes: Optional[Tuple[Tuple[int]]] = None,
         n_freq_downsample: Optional[Tuple[Tuple[int]]] = None,
-        MaxPool1d: bool = True,
+        MaxPool1d: bool = False,
         optimizer_kwargs: Optional[dict] = None,
         use_exogenous: bool = True,
         random_state: int = 0,
@@ -86,14 +85,7 @@ class Forecaster:
 
             num_layers (int): The number of fully connected layers preceding the final forking layers in each block of every stack.
 
-            layer_widths (Union[int, List[int]]):
-                Determines the number of neurons that make up each fully connected layer in each block of every stack.
-                If a list is passed, it must have a length equal to num_stacks and every entry in that list corresponds
-                to the layer width of the corresponding stack. If an integer is passed, every stack will have blocks with FC layers of the same width.
-                If an integer is passed, every stack will have blocks with FC layers of the same width.
-
-
-            dropout (float):
+                        dropout (float):
                 The dropout probability to be used in fully connected layers.
                 This is compatible with Monte Carlo dropout at inference time for model uncertainty estimation (enabled with mc_dropout=True at prediction time).
 
@@ -132,7 +124,7 @@ class Forecaster:
         self.num_stacks = num_stacks
         self.num_blocks = num_blocks
         self.num_layers = num_layers
-        self.layer_widths = layer_widths
+        self.layer_widths = int(4*self.data_schema.forecast_length)
         self.dropout = dropout
         self.activation = activation
         self.pooling_kernel_sizes = pooling_kernel_sizes
