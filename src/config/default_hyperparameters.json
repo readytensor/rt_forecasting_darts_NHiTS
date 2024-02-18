@@ -9,7 +9,9 @@
   "batch_size": 16,
   "force_reset": true,
   "save_checkpoints": true,
-  "optimizer_kwargs": { "lr": 1e-3 },
+  "optimizer_kwargs": {
+    "lr": 1e-3
+  },
   "use_exogenous": true,
   "random_state": 0
 }
